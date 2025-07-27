@@ -10,11 +10,8 @@ export class ArtistsService {
         private artistRepo: Repository<Artist>
     ) {}
 
-    async findArtist(userId: number): Promise<Artist> {
+    async findArtist(userId: number): Promise<Artist | null> {
         const artist = await this.artistRepo.findOneBy({ user: {id: userId } });
-        if (!artist) {
-            throw new NotFoundException(`Artist with id ${userId} not found`);
-        }
         return artist;
     }
 }
