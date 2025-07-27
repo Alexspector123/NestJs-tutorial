@@ -17,6 +17,7 @@ import { Playlist } from './playlists/playlist.entity';
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 
 import { DevConfigService } from './common/providers/DevConfigService';
+import { ArtistsModule } from './artists/artists.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { DevConfigService } from './common/providers/DevConfigService';
     }),
     AuthModule,
     UsersModule,
+    ArtistsModule,
   ],
   providers: [
     AppService,
