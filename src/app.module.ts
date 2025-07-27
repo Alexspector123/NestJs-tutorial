@@ -21,6 +21,8 @@ import { ArtistsModule } from './artists/artists.module';
 import { typeOrmAsyncConfig } from 'db/data-source';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { validate } from 'env.validation';
+
 
 @Module({
   imports: [
@@ -33,7 +35,8 @@ import configuration from './config/configuration';
     ConfigModule.forRoot({
       envFilePath: ['.env.development', '.env.production'],
       isGlobal: true,
-      load: [configuration]
+      load: [configuration],
+      validate: validate,
     }),
   ],
   providers: [
