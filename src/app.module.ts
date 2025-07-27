@@ -18,21 +18,13 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 
 import { DevConfigService } from './common/providers/DevConfigService';
 import { ArtistsModule } from './artists/artists.module';
+import { dataSourceOptions } from 'db/data-source';
 
 @Module({
   imports: [
     PlayListsModule,
     SongsModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'memorizex12345',
-      database: 'test',
-      entities: [Song, Artist, User, Playlist],
-      synchronize: true, // Choose false when change to production
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     UsersModule,
     ArtistsModule,
