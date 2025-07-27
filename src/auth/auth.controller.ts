@@ -9,6 +9,7 @@ import { request } from 'http';
 import { Enable2FAType } from './types';
 import { ValidateTokenDTO } from './dto/validate-token.dto';
 import { UpdateResult } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -31,15 +32,6 @@ export class AuthController {
         login: LoginDTO,
     ): Promise<{ accessToken: string } | { validate2FA: string; message: string }> {
         return this.authService.login(login);
-    }
-
-    @Get()
-    @UseGuards(JwtAuthGuard)
-    getProfile(
-        @Req()
-        request,
-    ) {
-        return request.user;
     }
 
     @Get('enable-2fa')
@@ -73,4 +65,17 @@ export class AuthController {
             validateToken.token,
         )
     }
+
+    @Get('profile')
+    @UseGuards(AuthGuard('bearer'))
+    getProfile (
+        @Req()
+        req
+    ) {
+        delete req.user.password;
+        return {
+            msg: 'authenticated with api key',
+            user: req.user,
+        }
+    };
 }
