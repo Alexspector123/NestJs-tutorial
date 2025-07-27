@@ -3,14 +3,36 @@ import { User } from "src/users/user.entity";
 import { Artist } from "src/artists/artist.entity";
 import { Song } from "src/songs/song.entity";
 import { Playlist } from "src/playlists/playlist.entity";
+import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+
+export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: async (
+        configService: ConfigService
+    ): Promise<TypeOrmModuleOptions> => {
+        return {
+            type: 'mysql',
+            host: configService.get<string>('dbHost'),
+            port: configService.get<number>('dbPort'),
+            username: configService.get<string>('username'),
+            password: configService.get<string>('password'),
+            database: configService.get<string>('dbName'),
+            entities: [Song, Artist, User, Playlist],
+            synchronize: false,
+            migrations: ['dist/db/migrations/*.js'],
+        }
+    }
+}
 
 export const dataSourceOptions: DataSourceOptions = ({
     type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: 'memorizex12345',
-    database: 'test',
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT ?? '3306'),
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DB_NAME,
     entities: [Song, Artist, User, Playlist],
     synchronize: false,
     migrations: ['dist/db/migrations/*.js'],

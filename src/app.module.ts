@@ -18,16 +18,23 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 
 import { DevConfigService } from './common/providers/DevConfigService';
 import { ArtistsModule } from './artists/artists.module';
-import { dataSourceOptions } from 'db/data-source';
+import { typeOrmAsyncConfig } from 'db/data-source';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     PlayListsModule,
     SongsModule,
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     AuthModule,
     UsersModule,
     ArtistsModule,
+    ConfigModule.forRoot({
+      envFilePath: ['.env.development', '.env.production'],
+      isGlobal: true,
+      load: [configuration]
+    }),
   ],
   providers: [
     AppService,
