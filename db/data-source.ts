@@ -6,6 +6,17 @@ import { Playlist } from "src/playlists/playlist.entity";
 import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
+//LOAD Environment Variables
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`,
+});
+
+if (!process.env.NODE_ENV) {
+  throw new Error('❌ NODE_ENV is not set. Please set NODE_ENV before running migration.');
+}
+
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     imports: [ConfigModule],
     inject: [ConfigService],
@@ -30,8 +41,8 @@ export const dataSourceOptions: DataSourceOptions = ({
     type: 'mysql',
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT ?? '3306'),
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     entities: [Song, Artist, User, Playlist],
     synchronize: false,

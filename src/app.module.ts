@@ -9,11 +9,6 @@ import { UsersModule } from './users/users.module';
 
 import { AppService } from './app.service';
 
-import { Song } from './songs/song.entity';
-import { Artist } from './artists/artist.entity';
-import { User } from './users/user.entity';
-import { Playlist } from './playlists/playlist.entity';
-
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 
 import { DevConfigService } from './common/providers/DevConfigService';
@@ -33,7 +28,7 @@ import { validate } from 'env.validation';
     UsersModule,
     ArtistsModule,
     ConfigModule.forRoot({
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
       isGlobal: true,
       load: [configuration],
       validate: validate,
@@ -47,10 +42,4 @@ import { validate } from 'env.validation';
     }
   ]
 })
-export class AppModule implements NestModule {
-  constructor(private dataSource: DataSource) {}
-  configure(consumer: MiddlewareConsumer) {
-      consumer.apply(LoggerMiddleware)
-      .forRoutes('songs');
-  }
-}
+export class AppModule {}
